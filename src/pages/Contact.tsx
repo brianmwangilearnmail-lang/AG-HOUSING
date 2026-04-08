@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { MapPin, Phone, Mail, Clock } from 'lucide-react';
 import Dropdown from '../components/Dropdown';
+import { useContent } from '../context/ContentContext';
 
 export default function Contact() {
+  const { data } = useContent();
+  const { hero, info } = data.contact;
   const [interestedIn, setInterestedIn] = useState("");
 
   return (
@@ -10,9 +13,9 @@ export default function Contact() {
       {/* Header */}
       <div className="bg-brand-charcoal/90 backdrop-blur-md text-white py-20 mb-16 border-y border-white/10 shadow-lg">
         <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="font-serif text-4xl md:text-6xl mb-6">Get in Touch</h1>
+          <h1 className="font-serif text-4xl md:text-6xl mb-6">{hero.title}</h1>
           <p className="text-white/80 max-w-2xl mx-auto text-lg md:text-xl">
-            Ready to secure your piece of land? Have questions? Our team is here to help you every step of the way.
+            {hero.subtitle}
           </p>
         </div>
       </div>
@@ -34,7 +37,7 @@ export default function Contact() {
                 </div>
                 <div>
                   <h4 className="font-serif text-xl text-brand-charcoal mb-1">Office Location</h4>
-                  <p className="text-brand-grey">Nairobi Business Park,<br/>Ngong Road, Nairobi, Kenya</p>
+                  <p className="text-brand-grey whitespace-pre-line">{info.address}</p>
                 </div>
               </div>
 
@@ -44,7 +47,7 @@ export default function Contact() {
                 </div>
                 <div>
                   <h4 className="font-serif text-xl text-brand-charcoal mb-1">Phone & WhatsApp</h4>
-                  <p className="text-brand-grey">+254 700 000 000<br/>+254 711 111 111</p>
+                  <p className="text-brand-grey whitespace-pre-line">{info.phone}</p>
                 </div>
               </div>
 
@@ -54,7 +57,7 @@ export default function Contact() {
                 </div>
                 <div>
                   <h4 className="font-serif text-xl text-brand-charcoal mb-1">Email</h4>
-                  <p className="text-brand-grey">sales@aghousing.co.ke<br/>info@aghousing.co.ke</p>
+                  <p className="text-brand-grey whitespace-pre-line">{info.email}</p>
                 </div>
               </div>
 
@@ -64,7 +67,7 @@ export default function Contact() {
                 </div>
                 <div>
                   <h4 className="font-serif text-xl text-brand-charcoal mb-1">Working Hours</h4>
-                  <p className="text-brand-grey">Mon - Fri: 8:00 AM - 5:00 PM<br/>Sat: 9:00 AM - 1:00 PM</p>
+                  <p className="text-brand-grey whitespace-pre-line">{info.hours}</p>
                 </div>
               </div>
             </div>

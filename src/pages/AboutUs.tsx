@@ -1,15 +1,18 @@
 import React from 'react';
 import { Target, Shield, Heart, Award } from 'lucide-react';
+import { useContent } from '../context/ContentContext';
 
 export default function AboutUs() {
+  const { data } = useContent();
+  const { hero, story, team } = data.about;
   return (
     <div className="pt-24 pb-20 min-h-screen">
       {/* Header */}
       <div className="bg-brand-charcoal/90 backdrop-blur-md text-white py-20 mb-16 border-y border-white/10 shadow-lg">
         <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="font-serif text-4xl md:text-6xl mb-6">About AG Housing</h1>
+          <h1 className="font-serif text-4xl md:text-6xl mb-6">{hero.title}</h1>
           <p className="text-white/80 max-w-2xl mx-auto text-lg md:text-xl">
-            Connecting serious buyers to premium land opportunities across Kenya with transparency, integrity, and strategic insight.
+            {hero.subtitle}
           </p>
         </div>
       </div>
@@ -19,17 +22,17 @@ export default function AboutUs() {
         {/* Our Story */}
         <div className="flex flex-col md:flex-row gap-12 items-center mb-24">
           <div className="flex-1 bg-white/60 backdrop-blur-xl p-8 md:p-12 rounded-3xl shadow-lg border border-white/50">
-            <h2 className="font-serif text-3xl md:text-4xl text-brand-charcoal mb-6">Our Story</h2>
+            <h2 className="font-serif text-3xl md:text-4xl text-brand-charcoal mb-6">{story.title}</h2>
             <p className="text-brand-grey text-lg mb-4 leading-relaxed">
-              AG Housing was founded with a singular vision: to bring trust and transparency to the Kenyan real estate market. We recognized that buying land is one of the most significant investments our clients will ever make, yet the process was often fraught with uncertainty and risk.
+              {story.paragraph1}
             </p>
             <p className="text-brand-grey text-lg leading-relaxed">
-              Today, we stand as a beacon of reliability. We meticulously source, verify, and curate premium land parcels, ensuring that every plot we offer comes with a clean title deed and immense potential for growth. Whether you are building a family home or expanding your investment portfolio, AG Housing is your trusted partner.
+              {story.paragraph2}
             </p>
           </div>
           <div className="flex-1 rounded-3xl overflow-hidden shadow-xl border border-white/20">
             <img 
-              src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1200&auto=format&fit=crop" 
+              src={story.image} 
               alt="AG Housing Team" 
               className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
             />
@@ -61,12 +64,8 @@ export default function AboutUs() {
         <div>
           <h2 className="font-serif text-3xl md:text-4xl text-brand-charcoal mb-12 text-center drop-shadow-sm">Meet The Team</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              { name: "David Mwangi", role: "Founder & CEO", img: "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=800&auto=format&fit=crop" },
-              { name: "Sarah Omondi", role: "Head of Sales", img: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=800&auto=format&fit=crop" },
-              { name: "James Kamau", role: "Legal & Compliance", img: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=800&auto=format&fit=crop" }
-            ].map((member, idx) => (
-              <div key={idx} className="bg-white/60 backdrop-blur-xl rounded-3xl overflow-hidden shadow-lg border border-white/50 group">
+            {team.map((member) => (
+              <div key={member.id} className="bg-white/60 backdrop-blur-xl rounded-3xl overflow-hidden shadow-lg border border-white/50 group">
                 <div className="h-80 overflow-hidden">
                   <img src={member.img} alt={member.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
                 </div>

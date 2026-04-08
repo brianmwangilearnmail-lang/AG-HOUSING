@@ -2,86 +2,15 @@ import React, { useState } from 'react';
 import { MapPin, Search, Filter } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Dropdown from '../components/Dropdown';
+import { useContent } from '../context/ContentContext';
 
 export default function AvailableLand() {
+  const { data } = useContent();
   const [locationFilter, setLocationFilter] = useState("");
   const [typeFilter, setTypeFilter] = useState("");
   const [sizeFilter, setSizeFilter] = useState("");
 
-  const allListings = [
-    {
-      id: 1,
-      title: "Prime Residential Plots in Ruiru",
-      location: "Ruiru, Kiambu County",
-      locationId: "kiambu",
-      size: "1/8 Acre (50x100)",
-      sizeId: "1/8",
-      typeId: "residential",
-      image: "https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?q=80&w=800&auto=format&fit=crop",
-      tags: ["Ready Title", "Water & Electricity"],
-      status: "Selling Fast"
-    },
-    {
-      id: 2,
-      title: "Scenic Agricultural Land",
-      location: "Naivasha, Nakuru County",
-      locationId: "nakuru",
-      size: "5 Acres",
-      sizeId: "1+",
-      typeId: "agricultural",
-      image: "https://images.unsplash.com/photo-1589923188900-85dae523342b?q=80&w=800&auto=format&fit=crop",
-      tags: ["Fertile Soil", "Road Access"],
-      status: "Available"
-    },
-    {
-      id: 3,
-      title: "Exclusive Gated Community Lots",
-      location: "Karen, Nairobi",
-      locationId: "nairobi",
-      size: "1/2 Acre",
-      sizeId: "1/2",
-      typeId: "residential",
-      image: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=800&auto=format&fit=crop",
-      tags: ["Highly Secure", "Premium Area"],
-      status: "Few Remaining"
-    },
-    {
-      id: 4,
-      title: "Commercial Highway Frontage",
-      location: "Mombasa Road, Machakos",
-      locationId: "machakos",
-      size: "1 Acre",
-      sizeId: "1+",
-      typeId: "commercial",
-      image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=800&auto=format&fit=crop",
-      tags: ["High Traffic", "Commercial Zoning"],
-      status: "New Listing"
-    },
-    {
-      id: 5,
-      title: "Affordable Plots in Kangundo",
-      location: "Kangundo Road, Machakos",
-      locationId: "machakos",
-      size: "1/8 Acre (50x100)",
-      sizeId: "1/8",
-      typeId: "residential",
-      image: "https://images.unsplash.com/photo-1472214103451-9374bd1c798e?q=80&w=800&auto=format&fit=crop",
-      tags: ["Fast Developing", "Great ROI"],
-      status: "Available"
-    },
-    {
-      id: 6,
-      title: "Lake View Residential Land",
-      location: "Kisumu County",
-      locationId: "kisumu",
-      size: "1/4 Acre",
-      sizeId: "1/4",
-      typeId: "residential",
-      image: "https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=800&auto=format&fit=crop",
-      tags: ["Scenic Views", "Serene Environment"],
-      status: "Available"
-    }
-  ];
+  const allListings = data.listings;
 
   const filteredListings = allListings.filter(listing => {
     if (locationFilter && listing.locationId !== locationFilter) return false;

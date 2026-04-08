@@ -1,25 +1,22 @@
 import React from 'react';
 import { TrendingUp, CheckCircle, FileText, MapPin, Key, Home, Search, Phone, ShieldCheck } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useContent } from '../context/ContentContext';
+
+const stepIcons = [<Search />, <Phone />, <MapPin />, <FileText />, <CheckCircle />, <Key />];
 
 export default function WhyInvest() {
-  const steps = [
-    { icon: <Search />, title: "1. Browse Listings", desc: "Explore our curated portfolio of premium land." },
-    { icon: <Phone />, title: "2. Contact Us", desc: "Reach out to our team to express interest." },
-    { icon: <MapPin />, title: "3. Site Visit", desc: "We arrange a guided tour of the property." },
-    { icon: <FileText />, title: "4. Due Diligence", desc: "Review all verified legal documents." },
-    { icon: <CheckCircle />, title: "5. Agreement", desc: "Sign the sale agreement and make payment." },
-    { icon: <Key />, title: "6. Ownership", desc: "Receive your title deed and own the land!" }
-  ];
+  const { data } = useContent();
+  const { hero, buyingProcess, faqs } = data.whyInvestPage;
 
   return (
     <div className="pt-24 pb-20 min-h-screen">
       {/* Header */}
       <div className="bg-brand-charcoal/90 backdrop-blur-md text-white py-20 mb-16 border-y border-white/10 shadow-lg">
         <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="font-serif text-4xl md:text-6xl mb-6">Why Invest in Land?</h1>
+          <h1 className="font-serif text-4xl md:text-6xl mb-6">{hero.title}</h1>
           <p className="text-white/80 max-w-2xl mx-auto text-lg md:text-xl">
-            Discover why land in Kenya remains one of the most secure, profitable, and enduring investments you can make.
+            {hero.subtitle}
           </p>
         </div>
       </div>
@@ -67,14 +64,14 @@ export default function WhyInvest() {
         {/* Buying Process */}
         <div className="bg-white/60 backdrop-blur-xl rounded-3xl p-8 md:p-16 shadow-lg border border-white/50 mb-24">
           <div className="text-center mb-12">
-            <h2 className="font-serif text-3xl md:text-4xl text-brand-charcoal mb-4 drop-shadow-sm">The Buying Process</h2>
-            <p className="text-brand-grey text-lg">A simple, transparent path to land ownership.</p>
+            <h2 className="font-serif text-3xl md:text-4xl text-brand-charcoal mb-4 drop-shadow-sm">{buyingProcess.title}</h2>
+            <p className="text-brand-grey text-lg">{buyingProcess.subtitle}</p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {steps.map((step, idx) => (
-              <div key={idx} className="relative p-6 border border-white/60 bg-white/40 backdrop-blur-sm rounded-2xl hover:border-brand-gold transition-colors shadow-sm">
-                <div className="text-brand-gold mb-4">{step.icon}</div>
+            {buyingProcess.steps.map((step, idx) => (
+              <div key={step.id} className="relative p-6 border border-white/60 bg-white/40 backdrop-blur-sm rounded-2xl hover:border-brand-gold transition-colors shadow-sm">
+                <div className="text-brand-gold mb-4">{stepIcons[idx] || <CheckCircle />}</div>
                 <h3 className="font-serif text-xl text-brand-charcoal mb-2">{step.title}</h3>
                 <p className="text-brand-grey">{step.desc}</p>
               </div>
@@ -86,13 +83,8 @@ export default function WhyInvest() {
         <div className="max-w-3xl mx-auto">
           <h2 className="font-serif text-3xl md:text-4xl text-brand-charcoal mb-10 text-center drop-shadow-sm">Frequently Asked Questions</h2>
           <div className="space-y-6">
-            {[
-              { q: "What documents will I receive upon purchase?", a: "You will receive a Sale Agreement, Transfer Forms, and ultimately, the original Title Deed registered in your name." },
-              { q: "How do I verify the title deed?", a: "We provide copies of the title deed for you to conduct an independent search at the Ministry of Lands before making any payment." },
-              { q: "Do you offer payment plans?", a: "Yes, we offer flexible installment plans ranging from 3 to 12 months depending on the specific property." },
-              { q: "Can I visit the land before buying?", a: "Absolutely. We organize free site visits every week to ensure you are completely satisfied with the location." }
-            ].map((faq, idx) => (
-              <div key={idx} className="bg-white/60 backdrop-blur-xl p-6 rounded-2xl shadow-lg border border-white/50">
+            {faqs.map((faq) => (
+              <div key={faq.id} className="bg-white/60 backdrop-blur-xl p-6 rounded-2xl shadow-lg border border-white/50">
                 <h4 className="font-serif text-xl text-brand-charcoal mb-3">{faq.q}</h4>
                 <p className="text-brand-grey">{faq.a}</p>
               </div>
