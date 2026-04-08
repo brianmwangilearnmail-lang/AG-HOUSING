@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { defaultContent } from '../data/defaultContent';
 import { supabase } from '../lib/supabase';
 
@@ -16,6 +16,27 @@ interface ContentContextType {
 const ContentContext = createContext<ContentContextType | undefined>(undefined);
 
 const LOCAL_KEY = 'ag_housing_content';
+const DEBOUNCE_MS = 800; // save 800ms after last change
+
+// ── Canvas-based image compressor — reduces base64 size by ~70-80% ──
+export async function compressImage(base64: string, maxWidth = 1200, quality = 0.75): Promise<string> {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      const scale = Math.min(1, maxWidth / img.width);
+      const w = Math.round(img.width * scale);
+      const h = Math.round(img.height * scale);
+      const canvas = document.createElement('canvas');
+      canvas.width = w;
+      canvas.height = h;
+      const ctx = canvas.getContext('2d')!;
+      ctx.drawImage(img, 0, 0, w, h);
+      resolve(canvas.toDataURL('image/jpeg', quality));
+    };
+    img.onerror = () => resolve(base64); // fallback to original on error
+    img.src = base64;
+  });
+}
 
 export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [data, setData] = useState<ContentData>(defaultContent);
@@ -23,7 +44,11 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [isLoading, setIsLoading] = useState(true);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
 
-  // ── Load data on mount: Supabase first, localStorage as fallback ──
+  // Debounce ref — holds the latest pending data to save
+  const pendingRef = useRef<ContentData | null>(null);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // ── Load data on mount ──
   useEffect(() => {
     const load = async () => {
       setIsLoading(true);
@@ -35,61 +60,60 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
           .single();
 
         if (!error && rows?.content && Object.keys(rows.content).length > 0) {
-          // Supabase has data — deep merge with default to fill in any new keys
           const merged = deepMerge(defaultContent, rows.content as ContentData);
           setData(merged);
-          // Cache locally too for offline resilience
           localStorage.setItem(LOCAL_KEY, JSON.stringify(merged));
         } else {
-          // Supabase empty or unreachable — try localStorage
           const cached = localStorage.getItem(LOCAL_KEY);
           if (cached) {
-            const parsed = JSON.parse(cached);
-            setData(deepMerge(defaultContent, parsed));
+            setData(deepMerge(defaultContent, JSON.parse(cached)));
           }
-          // If both empty just use defaultContent (already set)
         }
-      } catch (err) {
-        // Network error — fallback to localStorage
-        console.warn('Supabase load failed, using localStorage cache', err);
+      } catch {
         const cached = localStorage.getItem(LOCAL_KEY);
         if (cached) {
-          try {
-            setData(deepMerge(defaultContent, JSON.parse(cached)));
-          } catch {}
+          try { setData(deepMerge(defaultContent, JSON.parse(cached))); } catch {}
         }
       } finally {
         setIsLoading(false);
       }
     };
-
     load();
   }, []);
 
-  // ── Save data: write to Supabase + update localStorage cache ──
-  const updateData = async (newPartialData: Partial<ContentData>) => {
-    const updated = { ...data, ...newPartialData };
-    setData(updated);
+  // ── Flush to Supabase immediately ──
+  const flushSave = async (updated: ContentData) => {
     setIsSaving(true);
-
-    // Optimistic local cache
     localStorage.setItem(LOCAL_KEY, JSON.stringify(updated));
-
     try {
-      const { error } = await supabase
+      await supabase
         .from('site_content')
         .upsert({ id: 1, content: updated, updated_at: new Date().toISOString() });
-
-      if (error) {
-        console.error('Supabase save error:', error.message);
-      } else {
-        setLastSaved(new Date());
-      }
+      setLastSaved(new Date());
     } catch (err) {
-      console.error('Supabase save failed (stored locally):', err);
+      console.error('Save failed (stored locally):', err);
     } finally {
       setIsSaving(false);
     }
+  };
+
+  // ── updateData: optimistic UI + debounced remote save ──
+  const updateData = (newPartialData: Partial<ContentData>) => {
+    setData(prev => {
+      const updated = { ...prev, ...newPartialData };
+      pendingRef.current = updated;
+
+      // Debounce: clear old timer, set new one
+      if (timerRef.current) clearTimeout(timerRef.current);
+      timerRef.current = setTimeout(() => {
+        if (pendingRef.current) {
+          flushSave(pendingRef.current);
+          pendingRef.current = null;
+        }
+      }, DEBOUNCE_MS);
+
+      return updated;
+    });
   };
 
   const resetToDefault = async () => {
@@ -111,13 +135,11 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
 export const useContent = () => {
   const context = useContext(ContentContext);
-  if (context === undefined) {
-    throw new Error('useContent must be used within a ContentProvider');
-  }
+  if (context === undefined) throw new Error('useContent must be used within a ContentProvider');
   return context;
 };
 
-// ── Deep merge helper (keeps new default keys, overrides with saved values) ──
+// ── Deep merge helper ──
 function deepMerge<T extends object>(defaults: T, saved: Partial<T>): T {
   const result: any = { ...defaults };
   for (const key in saved) {

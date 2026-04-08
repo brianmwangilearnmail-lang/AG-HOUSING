@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { useContent, ContentData } from '../../context/ContentContext';
+import { useContent, ContentData, compressImage } from '../../context/ContentContext';
 import {
-  Save, Image as ImageIcon, Plus, Trash2, CheckCircle2,
-  Home, MapPin, Image, Users, Phone, HelpCircle, Info, LayoutGrid
+  Save, Image as ImageIcon, Plus, Trash2,
+  Home, MapPin, Image, Users, Phone, HelpCircle, Info, Loader2
 } from 'lucide-react';
 
 type Tab = 'home' | 'listings' | 'about' | 'whyinvest' | 'contact' | 'gallery' | 'testimonials';
@@ -11,38 +11,53 @@ const inputCls = "w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm f
 const labelCls = "block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5";
 const sectionCls = "space-y-4";
 
-const ImageUploadButton = ({ src, onUpload }: { src: string; onUpload: (base64: string) => void }) => (
-  <div className="group relative w-full h-40 rounded-xl overflow-hidden border-2 border-dashed border-gray-300 hover:border-brand-burgundy cursor-pointer transition-colors bg-gray-50">
-    {src ? (
-      <img src={src} alt="Preview" className="w-full h-full object-cover" />
-    ) : (
-      <div className="flex flex-col items-center justify-center h-full text-gray-400">
-        <ImageIcon size={32} className="mb-2" />
-        <span className="text-sm">No image set</span>
-      </div>
-    )}
-    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white">
-      <ImageIcon size={24} className="mb-1" />
-      <span className="text-sm font-medium">Click to Upload</span>
-      <span className="text-xs mt-1 text-white/70">Or paste a URL below</span>
+const ImageUploadButton = ({ src, onUpload }: { src: string; onUpload: (base64: string) => void }) => {
+  const [uploading, setUploading] = useState(false);
+
+  const handleFile = async (file: File) => {
+    setUploading(true);
+    const reader = new FileReader();
+    reader.onloadend = async () => {
+      const compressed = await compressImage(reader.result as string);
+      onUpload(compressed);
+      setUploading(false);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  return (
+    <div className="group relative w-full h-40 rounded-xl overflow-hidden border-2 border-dashed border-gray-300 hover:border-brand-burgundy cursor-pointer transition-colors bg-gray-50">
+      {src ? (
+        <img src={src} alt="Preview" className="w-full h-full object-cover" />
+      ) : (
+        <div className="flex flex-col items-center justify-center h-full text-gray-400">
+          <ImageIcon size={32} className="mb-2" />
+          <span className="text-sm">No image set</span>
+        </div>
+      )}
+      {uploading ? (
+        <div className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center text-white">
+          <Loader2 size={24} className="animate-spin mb-1" />
+          <span className="text-xs">Compressing…</span>
+        </div>
+      ) : (
+        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white">
+          <ImageIcon size={24} className="mb-1" />
+          <span className="text-sm font-medium">Click to Upload</span>
+          <span className="text-xs mt-1 text-white/70">Or paste a URL below</span>
+        </div>
+      )}
+      <label className="absolute inset-0 cursor-pointer">
+        <input
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={(e) => { const f = e.target.files?.[0]; if (f) handleFile(f); }}
+        />
+      </label>
     </div>
-    <label className="absolute inset-0 cursor-pointer">
-      <input
-        type="file"
-        accept="image/*"
-        className="hidden"
-        onChange={(e) => {
-          const file = e.target.files?.[0];
-          if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => onUpload(reader.result as string);
-            reader.readAsDataURL(file);
-          }
-        }}
-      />
-    </label>
-  </div>
-);
+  );
+};
 
 const SectionHeader = ({ title }: { title: string }) => (
   <h2 className="text-lg font-serif text-brand-charcoal pb-3 border-b border-gray-200 mb-5">{title}</h2>
@@ -100,7 +115,7 @@ export default function Dashboard() {
         <div>
           <h1 className="text-3xl font-serif text-brand-charcoal">Dashboard</h1>
           <p className="text-gray-400 text-sm mt-1">
-            {isLoading ? 'Loading from Supabase…' : lastSaved ? `Last saved: ${lastSaved.toLocaleTimeString()}` : 'Edit any content that appears on the website'}
+            {isLoading ? 'Loading…' : lastSaved ? `Last saved: ${lastSaved.toLocaleTimeString()}` : 'Edit any content that appears on the website'}
           </p>
         </div>
         <button
@@ -108,22 +123,16 @@ export default function Dashboard() {
           disabled={isSaving || isLoading}
           className="bg-brand-burgundy hover:bg-brand-burgundy-hover disabled:opacity-60 disabled:cursor-wait text-white px-6 py-2.5 rounded-xl font-medium transition-colors flex items-center gap-2 shadow"
         >
-          <Save size={18} />
-          {isSaving ? 'Saving to Supabase…' : 'Save Changes'}
+          {isSaving ? <Loader2 size={18} className="animate-spin" /> : <Save size={18} />}
+          {isSaving ? 'Saving…' : 'Save'}
         </button>
       </div>
 
-      {isLoading && (
-        <div className="bg-blue-50 border border-blue-200 text-blue-700 px-4 py-3 rounded-lg flex items-center gap-2 mb-5 text-sm">
-          <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-          Loading latest content from Supabase database…
-        </div>
-      )}
-
-      {isSaving && (
-        <div className="bg-amber-50 border border-amber-200 text-amber-700 px-4 py-3 rounded-lg flex items-center gap-2 mb-5 text-sm">
-          <div className="w-4 h-4 border-2 border-amber-500 border-t-transparent rounded-full animate-spin"></div>
-          Saving changes to Supabase database…
+      {/* Slim status bar */}
+      {(isLoading || isSaving) && (
+        <div className="flex items-center gap-2 text-xs text-gray-400 mb-4">
+          <Loader2 size={13} className="animate-spin" />
+          {isLoading ? 'Loading content…' : 'Saving…'}
         </div>
       )}
 
