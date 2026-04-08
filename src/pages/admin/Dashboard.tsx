@@ -146,6 +146,29 @@ export default function Dashboard() {
         {activeTab === 'home' && (
           <div className="space-y-10">
             <div>
+              <SectionHeader title="Site Branding" />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className={labelCls}>Main Logo (PNG recommended)</label>
+                  <ImageUploadButton
+                    src={localData.logo}
+                    onUpload={(b64) => updatePath(['logo'], b64)}
+                  />
+                  <input
+                    type="text"
+                    placeholder="Or paste image URL here…"
+                    value={localData.logo.startsWith('data:') ? '' : localData.logo}
+                    onChange={e => updatePath(['logo'], e.target.value)}
+                    className={`${inputCls} mt-2`}
+                  />
+                </div>
+                <div className="flex items-center text-sm text-gray-400 italic pt-6">
+                  This logo appears at the top of every page. For best results, use a transparent PNG.
+                </div>
+              </div>
+            </div>
+
+            <div>
               <SectionHeader title="Hero Section" />
               <div className="space-y-4">
                 <div>

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, MapPin, Phone, Mail, MessageCircle } from 'lucide-react';
+import { useContent } from './context/ContentContext';
 
 export const Navbar = () => {
+  const { data } = useContent();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
@@ -50,7 +52,7 @@ export const Navbar = () => {
           <div className="flex items-center">
             <Link to="/" className="flex items-center">
               <img 
-                src="/logo.png" 
+                src={data.logo} 
                 alt="AG Housing Logo" 
                 className="h-12 w-auto object-contain"
               />

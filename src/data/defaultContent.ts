@@ -1,4 +1,5 @@
 export const defaultContent = {
+  logo: "/logo.png",
   home: {
     hero: {
       image: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=2832&auto=format&fit=crop",
