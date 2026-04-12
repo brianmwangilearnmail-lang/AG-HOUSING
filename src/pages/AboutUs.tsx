@@ -39,6 +39,22 @@ export default function AboutUs() {
           </div>
         </div>
 
+        {/* Vision & Mission */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-24">
+          <div className="bg-brand-charcoal text-white p-8 md:p-12 rounded-3xl shadow-lg border border-brand-charcoal/50 hover:-translate-y-2 transition-transform duration-300">
+             <h2 className="font-serif text-3xl mb-6 text-brand-gold drop-shadow-sm">Vision</h2>
+             <p className="text-white/90 text-lg leading-relaxed">
+               To be the leading Christian housing society providing affordable land and houses to clergy and members of Assemblies of God.
+             </p>
+          </div>
+          <div className="bg-brand-burgundy text-white p-8 md:p-12 rounded-3xl shadow-lg border border-brand-burgundy/50 hover:-translate-y-2 transition-transform duration-300">
+             <h2 className="font-serif text-3xl mb-6 text-brand-gold drop-shadow-sm">Mission</h2>
+             <p className="text-white/90 text-lg leading-relaxed">
+               To upgrade the livelihood of Assemblies of God clergy and members through buying and selling of affordable land and houses.
+             </p>
+          </div>
+        </div>
+
         {/* Core Values */}
         <div className="mb-24">
           <h2 className="font-serif text-3xl md:text-4xl text-brand-charcoal mb-12 text-center drop-shadow-sm">Our Core Values</h2>
