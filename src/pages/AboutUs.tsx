@@ -1,5 +1,5 @@
 import React from 'react';
-import { Target, Shield, Heart, Award } from 'lucide-react';
+import { Target, Shield, Heart, Award, Users } from 'lucide-react';
 import { useContent } from '../context/ContentContext';
 
 export default function AboutUs() {
@@ -39,19 +39,39 @@ export default function AboutUs() {
           </div>
         </div>
 
-        {/* Vision & Mission */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-24">
-          <div className="bg-brand-charcoal text-white p-8 md:p-12 rounded-3xl shadow-lg border border-brand-charcoal/50 hover:-translate-y-2 transition-transform duration-300">
+        {/* Eligibility Text */}
+        <div className="bg-brand-cream/80 border border-brand-gold/30 rounded-3xl p-8 mb-12 text-center text-brand-charcoal shadow-sm">
+           <p className="text-xl md:text-2xl font-medium">
+             AG Housing is open to all KAG Sacco members, departments and groups that are registered under the KAG sacco.
+           </p>
+        </div>
+
+        {/* Vision, Mission & Objectives */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-24">
+          <div className="bg-brand-charcoal text-white p-8 md:p-10 rounded-3xl shadow-lg border border-brand-charcoal/50 hover:-translate-y-2 transition-transform duration-300">
              <h2 className="font-serif text-3xl mb-6 text-brand-gold drop-shadow-sm">Vision</h2>
              <p className="text-white/90 text-lg leading-relaxed">
                To be the leading Christian housing society providing affordable land and houses to clergy and members of Assemblies of God.
              </p>
           </div>
-          <div className="bg-brand-burgundy text-white p-8 md:p-12 rounded-3xl shadow-lg border border-brand-burgundy/50 hover:-translate-y-2 transition-transform duration-300">
+          <div className="bg-brand-burgundy text-white p-8 md:p-10 rounded-3xl shadow-lg border border-brand-burgundy/50 hover:-translate-y-2 transition-transform duration-300">
              <h2 className="font-serif text-3xl mb-6 text-brand-gold drop-shadow-sm">Mission</h2>
              <p className="text-white/90 text-lg leading-relaxed">
                To upgrade the livelihood of Assemblies of God clergy and members through buying and selling of affordable land and houses.
              </p>
+          </div>
+          <div className="bg-white/90 text-brand-charcoal p-8 md:p-10 rounded-3xl shadow-lg border border-brand-gold/50 hover:-translate-y-2 transition-transform duration-300">
+             <h2 className="font-serif text-3xl mb-6 text-[#9c6f2a] drop-shadow-sm uppercase font-bold tracking-wide">Objectives</h2>
+             <ul className="text-brand-charcoal text-lg leading-relaxed space-y-4">
+               <li className="flex items-start gap-3">
+                 <span className="text-[#9c6f2a] mt-1 text-xl leading-none">•</span> 
+                 <span>To sell plots of land and houses.</span>
+               </li>
+               <li className="flex items-start gap-3">
+                 <span className="text-[#9c6f2a] mt-1 text-xl leading-none">•</span> 
+                 <span>To grant dividends to AG housing members.</span>
+               </li>
+             </ul>
           </div>
         </div>
 
@@ -60,10 +80,10 @@ export default function AboutUs() {
           <h2 className="font-serif text-3xl md:text-4xl text-brand-charcoal mb-12 text-center drop-shadow-sm">Our Core Values</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
-              { icon: <Shield size={32} />, title: "Transparency", desc: "Clear communication and no hidden fees. What you see is exactly what you get." },
-              { icon: <Award size={32} />, title: "Integrity", desc: "We conduct rigorous due diligence so you can invest with absolute confidence." },
-              { icon: <Heart size={32} />, title: "Customer First", desc: "Your goals are our priority. We guide you through every step of the journey." },
-              { icon: <Target size={32} />, title: "Long-Term Value", desc: "We select properties in high-growth areas to ensure your investment appreciates." }
+              { icon: <Heart size={32} />, title: "Spirit Led", desc: "Guided by faith and spiritual principles in all our dealings and decisions." },
+              { icon: <Award size={32} />, title: "Integrity", desc: "Dedicated to complete honesty, transparency, and doing what is right." },
+              { icon: <Shield size={32} />, title: "Accountability", desc: "Taking full ownership and being openly responsible for our members' resources." },
+              { icon: <Users size={32} />, title: "Team Work", desc: "Working collaboratively to achieve our shared goals and build up our community." }
             ].map((value, idx) => (
               <div key={idx} className="bg-white/60 backdrop-blur-xl p-8 rounded-3xl shadow-lg border border-white/50 text-center hover:-translate-y-2 transition-transform duration-300">
                 <div className="w-16 h-16 bg-brand-burgundy/10 text-brand-burgundy rounded-2xl flex items-center justify-center mx-auto mb-6">

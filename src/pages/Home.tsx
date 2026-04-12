@@ -324,6 +324,13 @@ const HowToJoin = () => {
             </ul>
           </div>
         </div>
+
+        <div className="text-center mt-12 relative z-10">
+          <Link to="/join" className="inline-flex items-center gap-2 bg-brand-charcoal text-brand-gold hover:bg-brand-charcoal/90 px-10 py-4 rounded-full font-serif text-lg font-bold transition-all shadow-lg hover:shadow-xl hover:-translate-y-1 border border-brand-gold/30">
+            Learn More
+            <ArrowRight size={20} />
+          </Link>
+        </div>
       </div>
     </section>
   );

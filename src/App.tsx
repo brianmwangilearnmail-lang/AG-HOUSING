@@ -7,6 +7,7 @@ import AboutUs from './pages/AboutUs';
 import WhyInvest from './pages/WhyInvest';
 import Gallery from './pages/Gallery';
 import Contact from './pages/Contact';
+import JoinUs from './pages/JoinUs';
 
 // Context Providers
 import { ContentProvider } from './context/ContentContext';
@@ -57,6 +58,7 @@ export default function App() {
             <Route path="/why-invest" element={<WhyInvest />} />
             <Route path="/gallery" element={<Gallery />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/join" element={<JoinUs />} />
           </Route>
         </Routes>
       </Router>
