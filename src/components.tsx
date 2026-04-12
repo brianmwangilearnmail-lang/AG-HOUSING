@@ -54,7 +54,7 @@ export const Navbar = () => {
               <img 
                 src={data.logo} 
                 alt="AG Housing Logo" 
-                className="h-12 w-auto object-contain"
+                className="h-16 w-auto object-contain"
               />
             </Link>
           </div>

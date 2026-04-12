@@ -268,6 +268,67 @@ const Testimonials = () => {
   );
 };
 
+const HowToJoin = () => {
+  return (
+    <section className="py-24 relative overflow-hidden bg-brand-cream/40">
+      <div className="absolute inset-0 opacity-5" style={{ backgroundImage: 'radial-gradient(#C9922A 1px, transparent 1px)', backgroundSize: '30px 30px' }}></div>
+      <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="text-center max-w-3xl mx-auto mb-16">
+          <div className="inline-block bg-[#a3792e] text-white font-serif text-3xl md:text-5xl px-10 py-4 rounded-full shadow-lg border-b-8 border-[#825e1f]">
+            How to Join
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 max-w-5xl mx-auto relative bg-white/50 backdrop-blur-xl border border-white/60 p-8 md:p-12 rounded-[2rem] shadow-xl">
+          {/* Desktop Divider */}
+          <div className="hidden md:block absolute left-1/2 top-[10%] bottom-[10%] w-[2px] bg-brand-charcoal/20 -translate-x-1/2"></div>
+          
+          {/* Group and Church */}
+          <div>
+            <h3 className="font-serif text-[28px] text-[#a3792e] uppercase tracking-wide mb-8 font-bold md:text-left">Group and Church</h3>
+            <ul className="space-y-5 text-brand-charcoal">
+              {[
+                "Duly filled group/church registration form.",
+                "Group registration certificate",
+                "Passport size photo",
+                "Copy of KRA pin",
+                "Names of group members, copy of ID and Telephone numbers.",
+                "Registration ksh 2,000"
+              ].map((item, idx) => (
+                <li key={idx} className="flex items-start gap-4">
+                  <div className="w-3 h-3 rounded-full bg-brand-charcoal mt-2 shrink-0 shadow-sm"></div>
+                  <span className="text-lg font-medium leading-relaxed">{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Individuals */}
+          <div>
+            <h3 className="font-serif text-[28px] text-[#a3792e] uppercase tracking-wide mb-8 font-bold md:text-left">Individuals</h3>
+            <ul className="space-y-5 text-brand-charcoal">
+              {[
+                "Duly filled registration form",
+                "Copy of ID",
+                "Copy of KRA pin",
+                "Passport size photo",
+                "Registration ksh2,000",
+                "Minimum monthly contribution ksh1000.",
+                "A fully registered AG housing member should have share capital of not less than Ksh 20,000."
+              ].map((item, idx) => (
+                <li key={idx} className="flex items-start gap-4">
+                  <div className="w-3 h-3 rounded-full bg-brand-charcoal mt-2 shrink-0 shadow-sm"></div>
+                  <span className="text-lg font-medium leading-relaxed">{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
 export default function Home() {
   return (
     <>
@@ -275,7 +336,9 @@ export default function Home() {
       <TrustBar />
       <FeaturedLand />
       <WhyInvestPreview />
+      <HowToJoin />
       <Testimonials />
     </>
   );
 }
+
