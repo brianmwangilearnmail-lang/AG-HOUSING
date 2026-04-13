@@ -64,8 +64,18 @@ export default function ImageCropModal({ src, onComplete, onCancel }: ImageCropM
     const scaleX = image.naturalWidth / image.width;
     const scaleY = image.naturalHeight / image.height;
 
-    canvas.width = Math.round(completedCrop.width * scaleX);
-    canvas.height = Math.round(completedCrop.height * scaleY);
+    let dw = Math.round(completedCrop.width * scaleX);
+    let dh = Math.round(completedCrop.height * scaleY);
+    const MAX_DIM = 1600;
+
+    if (dw > MAX_DIM || dh > MAX_DIM) {
+      const targetRatio = Math.min(MAX_DIM / dw, MAX_DIM / dh);
+      dw = Math.round(dw * targetRatio);
+      dh = Math.round(dh * targetRatio);
+    }
+
+    canvas.width = dw;
+    canvas.height = dh;
 
     const ctx = canvas.getContext('2d')!;
     ctx.filter = `brightness(${brightness}%) contrast(${contrast}%)`;
@@ -77,8 +87,8 @@ export default function ImageCropModal({ src, onComplete, onCancel }: ImageCropM
       completedCrop.height * scaleY,
       0,
       0,
-      canvas.width,
-      canvas.height
+      dw,
+      dh
     );
 
     // Compress heavily with WebP (preserves transparency but reduces size by 80%)
@@ -94,11 +104,21 @@ export default function ImageCropModal({ src, onComplete, onCancel }: ImageCropM
     setApplying(true);
 
     const canvas = document.createElement('canvas');
-    canvas.width = image.naturalWidth;
-    canvas.height = image.naturalHeight;
+    let dw = image.naturalWidth;
+    let dh = image.naturalHeight;
+    const MAX_DIM = 1600;
+
+    if (dw > MAX_DIM || dh > MAX_DIM) {
+      const targetRatio = Math.min(MAX_DIM / dw, MAX_DIM / dh);
+      dw = Math.round(dw * targetRatio);
+      dh = Math.round(dh * targetRatio);
+    }
+    
+    canvas.width = dw;
+    canvas.height = dh;
     const ctx = canvas.getContext('2d')!;
     ctx.filter = `brightness(${brightness}%) contrast(${contrast}%)`;
-    ctx.drawImage(image, 0, 0);
+    ctx.drawImage(image, 0, 0, dw, dh);
 
     // Compress heavily with WebP (preserves transparency but reduces size by 80%)
     const base64 = canvas.toDataURL('image/webp', 0.85);

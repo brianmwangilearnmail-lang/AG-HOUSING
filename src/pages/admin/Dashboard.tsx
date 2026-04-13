@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useContent, ContentData } from '../../context/ContentContext';
+import { useContent, ContentData, compressImage } from '../../context/ContentContext';
 import ImageCropModal from '../../components/ui/ImageCropModal';
 import {
   Save, Image as ImageIcon, Plus, Trash2,
@@ -17,7 +17,11 @@ const ImageUploadButton = ({ src, onUpload }: { src: string; onUpload: (base64: 
 
   const handleFile = (file: File) => {
     const reader = new FileReader();
-    reader.onloadend = () => setPendingSrc(reader.result as string);
+    reader.onloadend = async () => {
+      const b64 = reader.result as string;
+      const compressed = await compressImage(b64, 1600, 0.85);
+      setPendingSrc(compressed);
+    };
     reader.readAsDataURL(file);
   };
 
@@ -95,7 +99,11 @@ export default function Dashboard() {
   const openTestimonialCrop = (file: File, idx: number) => {
     setTestimonialCropIdx(idx);
     const reader = new FileReader();
-    reader.onloadend = () => setTestimonialCropSrc(reader.result as string);
+    reader.onloadend = async () => {
+      const b64 = reader.result as string;
+      const compressed = await compressImage(b64, 800, 0.85);
+      setTestimonialCropSrc(compressed);
+    };
     reader.readAsDataURL(file);
   };
 
