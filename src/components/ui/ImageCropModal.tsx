@@ -231,20 +231,27 @@ export default function ImageCropModal({ src, onComplete, onCancel }: ImageCropM
           >
             <RotateCcw size={14} /> Reset adjustments
           </button>
-          <div className="flex gap-3">
+          <div className="flex gap-2 sm:gap-3">
             <button
               onClick={onCancel}
-              className="px-5 py-2 rounded-xl border border-gray-200 text-sm text-gray-600 hover:bg-gray-50 transition-colors"
+              className="px-4 py-2 rounded-xl border border-gray-200 text-sm text-gray-600 hover:bg-gray-50 transition-colors"
             >
               Cancel
             </button>
             <button
+              onClick={() => onComplete(src)}
+              disabled={applying}
+              className="px-4 py-2 rounded-xl bg-gray-600 text-white text-sm font-medium hover:bg-gray-700 transition-colors flex items-center gap-2 disabled:opacity-60"
+            >
+              Use Original
+            </button>
+            <button
               onClick={completedCrop?.width && completedCrop?.height ? handleApply : handleApplyFull}
               disabled={applying}
-              className="px-6 py-2 rounded-xl bg-gray-900 text-white text-sm font-medium hover:bg-black transition-colors flex items-center gap-2 disabled:opacity-60"
+              className="px-5 py-2 rounded-xl bg-gray-900 text-white text-sm font-medium hover:bg-black transition-colors flex items-center gap-2 disabled:opacity-60"
             >
               <Check size={16} />
-              {applying ? 'Applying…' : 'Apply'}
+              {applying ? 'Applying…' : 'Crop & Apply'}
             </button>
           </div>
         </div>
