@@ -108,14 +108,15 @@ const TrustBar = () => {
 const FeaturedLand = () => {
   const { data } = useContent();
   const listings = data.listings.filter(l => l.isFeatured);
+  const featured = (data.home as any).featuredSection ?? { title: 'Featured Properties', subtitle: '' };
 
   return (
     <section className="py-24 relative">
       <div className="w-full mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row justify-between items-end mb-12">
           <div className="max-w-2xl">
-            <h2 className="font-serif text-4xl md:text-5xl text-brand-charcoal mb-4">Featured Properties</h2>
-            <p className="text-brand-grey text-lg">Discover our handpicked selection of premium land opportunities, fully verified and ready for investment or development.</p>
+            <h2 className="font-serif text-4xl md:text-5xl text-brand-charcoal mb-4">{featured.title}</h2>
+            <p className="text-brand-grey text-lg">{featured.subtitle}</p>
           </div>
           <Link to="/available-land" className="mt-6 md:mt-0 flex items-center gap-2 text-brand-burgundy font-medium hover:text-brand-burgundy-hover transition-colors">
             View All Land <ArrowRight size={20} />
@@ -269,6 +270,9 @@ const Testimonials = () => {
 };
 
 const HowToJoin = () => {
+  const { data } = useContent();
+  const howToJoin = (data.home as any).howToJoin ?? { groupRequirements: [], individualRequirements: [] };
+
   return (
     <section className="py-24 relative overflow-hidden bg-brand-cream/40">
       <div className="absolute inset-0 opacity-5" style={{ backgroundImage: 'radial-gradient(#C9922A 1px, transparent 1px)', backgroundSize: '30px 30px' }}></div>
@@ -287,14 +291,7 @@ const HowToJoin = () => {
           <div>
             <h3 className="font-serif text-[28px] text-[#a3792e] uppercase tracking-wide mb-8 font-bold md:text-left">Group and Church</h3>
             <ul className="space-y-5 text-brand-charcoal">
-              {[
-                "Duly filled group/church registration form.",
-                "Group registration certificate",
-                "Passport size photo",
-                "Copy of KRA pin",
-                "Names of group members, copy of ID and Telephone numbers.",
-                "Registration ksh 2,000"
-              ].map((item, idx) => (
+              {howToJoin.groupRequirements.map((item: string, idx: number) => (
                 <li key={idx} className="flex items-start gap-4">
                   <div className="w-3 h-3 rounded-full bg-brand-charcoal mt-2 shrink-0 shadow-sm"></div>
                   <span className="text-lg font-medium leading-relaxed">{item}</span>
@@ -307,15 +304,7 @@ const HowToJoin = () => {
           <div>
             <h3 className="font-serif text-[28px] text-[#a3792e] uppercase tracking-wide mb-8 font-bold md:text-left">Individuals</h3>
             <ul className="space-y-5 text-brand-charcoal">
-              {[
-                "Duly filled registration form",
-                "Copy of ID",
-                "Copy of KRA pin",
-                "Passport size photo",
-                "Registration ksh2,000",
-                "Minimum monthly contribution ksh1000.",
-                "A fully registered AG housing member should have share capital of not less than Ksh 20,000."
-              ].map((item, idx) => (
+              {howToJoin.individualRequirements.map((item: string, idx: number) => (
                 <li key={idx} className="flex items-start gap-4">
                   <div className="w-3 h-3 rounded-full bg-brand-charcoal mt-2 shrink-0 shadow-sm"></div>
                   <span className="text-lg font-medium leading-relaxed">{item}</span>

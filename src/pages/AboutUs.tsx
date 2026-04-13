@@ -5,6 +5,7 @@ import { useContent } from '../context/ContentContext';
 export default function AboutUs() {
   const { data } = useContent();
   const { hero, story, team } = data.about;
+  const s = story as any; // allows accessing paragraph3-6 on older cached shapes
   return (
     <div className="pt-24 pb-20 min-h-screen">
       {/* Header */}
@@ -24,24 +25,15 @@ export default function AboutUs() {
           <div className="flex-1 bg-white/60 backdrop-blur-xl p-8 md:p-12 rounded-3xl shadow-lg border border-white/50">
             <h2 className="font-serif text-3xl md:text-4xl text-brand-charcoal mb-8">{story.title || "Our Story"}</h2>
             <div className="space-y-5">
-              <p className="text-brand-grey text-lg leading-relaxed">
-                AG Housing Cooperative Society Limited was founded through the visionary leadership of Bishop Njiri with a clear mission to provide an affordable, structured, and accessible pathway to land ownership.
-              </p>
-              <p className="text-brand-grey text-lg leading-relaxed">
-                While inspired by the need to serve members of the Kenya Assemblies of God fraternity, the Society has steadily evolved into a dynamic and inclusive cooperative, welcoming individuals from all walks of life who share the aspiration of owning land and building a secure future.
-              </p>
-              <p className="text-brand-grey text-lg leading-relaxed">
-                Since its official launch following the inaugural meeting and elections held on 24th September 2018, the Society has remained committed to strong governance, transparency, and accountability in line with cooperative principles.
-              </p>
-              <p className="text-brand-grey text-lg leading-relaxed">
-                Our journey has been marked by steady growth and proven success. In 2018, the Society delivered Tala Phase I (99 residential plots) followed by Tala Phase II(16 residential plots), both fully sold, demonstrating strong member confidence. This momentum continued with the acquisition of a 10-acre parcel in Mai-Mahiu in 2023, followed by Kantafu Phase I in 2025 and Kantafu Phase II in 2026, with an upcoming project in Kitengela further reinforcing our commitment to expanding access to affordable land ownership.
-              </p>
-              <p className="text-brand-grey text-lg leading-relaxed">
-                Beyond land ownership, we are committed to building thriving communities. As part of our corporate social responsibility, we dedicated two plots within each project for the development of a place of worship, supporting both social connection and spiritual growth.
-              </p>
-              <p className="text-brand-charcoal text-lg leading-relaxed font-medium">
-                Today, AG Housing Cooperative Society Limited stands as a trusted partner in land investment empowering individuals, families, and communities to achieve stability, dignity, and long-term prosperity through land ownership.
-              </p>
+              {[story.paragraph1, story.paragraph2, s.paragraph3, s.paragraph4, s.paragraph5]
+                .filter(Boolean)
+                .map((p: string, i: number) => (
+                  <p key={i} className="text-brand-grey text-lg leading-relaxed">{p}</p>
+                ))
+              }
+              {s.paragraph6 && (
+                <p className="text-brand-charcoal text-lg leading-relaxed font-medium">{s.paragraph6}</p>
+              )}
             </div>
           </div>
           <div className="flex-1 rounded-3xl overflow-hidden shadow-xl border border-white/20 lg:sticky lg:top-32 w-full h-[600px] lg:h-[800px]">

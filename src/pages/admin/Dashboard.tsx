@@ -299,12 +299,118 @@ export default function Dashboard() {
                 </div>
               </div>
             </div>
+
+            <div>
+              <SectionHeader title="Featured Properties Section (Home Page)" />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className={labelCls}>Section Title</label>
+                  <input type="text" className={inputCls} value={(localData.home as any).featuredSection?.title ?? ''}
+                    onChange={e => {
+                      const fs = { ...((localData.home as any).featuredSection ?? {}), title: e.target.value };
+                      updatePath(['home', 'featuredSection'], fs);
+                    }} />
+                </div>
+                <div>
+                  <label className={labelCls}>Section Subtitle</label>
+                  <textarea rows={3} className={inputCls} value={(localData.home as any).featuredSection?.subtitle ?? ''}
+                    onChange={e => {
+                      const fs = { ...((localData.home as any).featuredSection ?? {}), subtitle: e.target.value };
+                      updatePath(['home', 'featuredSection'], fs);
+                    }} />
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <SectionHeader title="How to Join Section" />
+              <p className="text-xs text-gray-400 -mt-3 mb-5">Changes here sync to both the Home page and the /join page automatically.</p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {/* Group Requirements */}
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <label className={labelCls}>Group &amp; Church Requirements</label>
+                    <button onClick={() => {
+                      const reqs = [...((localData.home as any).howToJoin?.groupRequirements ?? []), 'New requirement'];
+                      updatePath(['home', 'howToJoin', 'groupRequirements'], reqs);
+                    }} className="flex items-center gap-1 text-xs bg-brand-charcoal text-white px-2.5 py-1.5 rounded-lg hover:bg-black transition-colors">
+                      <Plus size={12} /> Add
+                    </button>
+                  </div>
+                  <div className="space-y-2">
+                    {((localData.home as any).howToJoin?.groupRequirements ?? []).map((req: string, i: number) => (
+                      <div key={i} className="flex gap-2 items-center">
+                        <input type="text" className={inputCls} value={req}
+                          onChange={e => {
+                            const reqs = [...((localData.home as any).howToJoin?.groupRequirements ?? [])];
+                            reqs[i] = e.target.value;
+                            updatePath(['home', 'howToJoin', 'groupRequirements'], reqs);
+                          }} />
+                        <button onClick={() => {
+                          const reqs = [...((localData.home as any).howToJoin?.groupRequirements ?? [])];
+                          reqs.splice(i, 1);
+                          updatePath(['home', 'howToJoin', 'groupRequirements'], reqs);
+                        }} className="text-gray-300 hover:text-red-500 transition-colors shrink-0 p-1">
+                          <Trash2 size={15} />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                {/* Individual Requirements */}
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <label className={labelCls}>Individual Requirements</label>
+                    <button onClick={() => {
+                      const reqs = [...((localData.home as any).howToJoin?.individualRequirements ?? []), 'New requirement'];
+                      updatePath(['home', 'howToJoin', 'individualRequirements'], reqs);
+                    }} className="flex items-center gap-1 text-xs bg-brand-charcoal text-white px-2.5 py-1.5 rounded-lg hover:bg-black transition-colors">
+                      <Plus size={12} /> Add
+                    </button>
+                  </div>
+                  <div className="space-y-2">
+                    {((localData.home as any).howToJoin?.individualRequirements ?? []).map((req: string, i: number) => (
+                      <div key={i} className="flex gap-2 items-center">
+                        <input type="text" className={inputCls} value={req}
+                          onChange={e => {
+                            const reqs = [...((localData.home as any).howToJoin?.individualRequirements ?? [])];
+                            reqs[i] = e.target.value;
+                            updatePath(['home', 'howToJoin', 'individualRequirements'], reqs);
+                          }} />
+                        <button onClick={() => {
+                          const reqs = [...((localData.home as any).howToJoin?.individualRequirements ?? [])];
+                          reqs.splice(i, 1);
+                          updatePath(['home', 'howToJoin', 'individualRequirements'], reqs);
+                        }} className="text-gray-300 hover:text-red-500 transition-colors shrink-0 p-1">
+                          <Trash2 size={15} />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         )}
 
         {/* ── LISTINGS TAB ── */}
         {activeTab === 'listings' && (
           <div>
+            <div className="mb-8 p-5 bg-gray-50 border border-gray-200 rounded-xl space-y-4">
+              <SectionHeader title="Available Land Page Header" />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className={labelCls}>Page Title</label>
+                  <input type="text" className={inputCls} value={(localData as any).availableLand?.hero?.title ?? ''}
+                    onChange={e => updatePath(['availableLand', 'hero', 'title'], e.target.value)} />
+                </div>
+                <div>
+                  <label className={labelCls}>Page Subtitle</label>
+                  <textarea rows={2} className={inputCls} value={(localData as any).availableLand?.hero?.subtitle ?? ''}
+                    onChange={e => updatePath(['availableLand', 'hero', 'subtitle'], e.target.value)} />
+                </div>
+              </div>
+            </div>
             <div className="flex justify-between items-center mb-5">
               <SectionHeader title="Land Listings" />
               <button onClick={() => {
@@ -400,16 +506,21 @@ export default function Dashboard() {
                   <input type="text" className={inputCls} value={localData.about.story.title}
                     onChange={e => updatePath(['about', 'story', 'title'], e.target.value)} />
                 </div>
-                <div>
-                  <label className={labelCls}>Paragraph 1</label>
-                  <textarea rows={4} className={inputCls} value={localData.about.story.paragraph1}
-                    onChange={e => updatePath(['about', 'story', 'paragraph1'], e.target.value)} />
-                </div>
-                <div>
-                  <label className={labelCls}>Paragraph 2</label>
-                  <textarea rows={4} className={inputCls} value={localData.about.story.paragraph2}
-                    onChange={e => updatePath(['about', 'story', 'paragraph2'], e.target.value)} />
-                </div>
+                {([
+                  { key: 'paragraph1', label: 'Paragraph 1' },
+                  { key: 'paragraph2', label: 'Paragraph 2' },
+                  { key: 'paragraph3', label: 'Paragraph 3' },
+                  { key: 'paragraph4', label: 'Paragraph 4' },
+                  { key: 'paragraph5', label: 'Paragraph 5' },
+                  { key: 'paragraph6', label: 'Closing Paragraph (bold)' },
+                ] as const).map(({ key, label }) => (
+                  <div key={key}>
+                    <label className={labelCls}>{label}</label>
+                    <textarea rows={4} className={inputCls}
+                      value={(localData.about.story as any)[key] ?? ''}
+                      onChange={e => updatePath(['about', 'story', key], e.target.value)} />
+                  </div>
+                ))}
                 <div>
                   <label className={labelCls}>Story Image</label>
                   <ImageUploadButton src={localData.about.story.image}

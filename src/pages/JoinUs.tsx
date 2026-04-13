@@ -1,7 +1,13 @@
 import React from 'react';
 import { Download, Printer } from 'lucide-react';
+import { useContent } from '../context/ContentContext';
 
 export default function JoinUs() {
+  const { data } = useContent();
+  const { groupRequirements, individualRequirements } = (data.home as any).howToJoin ?? {
+    groupRequirements: [],
+    individualRequirements: []
+  };
   const handlePrint = () => {
     window.open('/ASSEMBLIES_OF_GOD_REGISTRATION_FORM.pdf', '_blank');
   };
@@ -29,14 +35,7 @@ export default function JoinUs() {
           <div>
             <h3 className="font-serif text-[28px] text-[#a3792e] uppercase tracking-wide mb-8 font-bold md:text-left">Group and Church</h3>
             <ul className="space-y-5 text-brand-charcoal">
-              {[
-                "Duly filled group/church registration form.",
-                "Group registration certificate",
-                "Passport size photo",
-                "Copy of KRA pin",
-                "Names of group members, copy of ID and Telephone numbers.",
-                "Registration ksh 2,000"
-              ].map((item, idx) => (
+              {groupRequirements.map((item: string, idx: number) => (
                 <li key={idx} className="flex items-start gap-4">
                   <div className="w-3 h-3 rounded-full bg-brand-charcoal mt-2 shrink-0 shadow-sm"></div>
                   <span className="text-lg font-medium leading-relaxed">{item}</span>
@@ -49,15 +48,7 @@ export default function JoinUs() {
           <div>
             <h3 className="font-serif text-[28px] text-[#a3792e] uppercase tracking-wide mb-8 font-bold md:text-left">Individuals</h3>
             <ul className="space-y-5 text-brand-charcoal">
-              {[
-                "Duly filled registration form",
-                "Copy of ID",
-                "Copy of KRA pin",
-                "Passport size photo",
-                "Registration ksh2,000",
-                "Minimum monthly contribution ksh1000.",
-                "A fully registered AG housing member should have share capital of not less than Ksh 20,000."
-              ].map((item, idx) => (
+              {individualRequirements.map((item: string, idx: number) => (
                 <li key={idx} className="flex items-start gap-4">
                   <div className="w-3 h-3 rounded-full bg-brand-charcoal mt-2 shrink-0 shadow-sm"></div>
                   <span className="text-lg font-medium leading-relaxed">{item}</span>

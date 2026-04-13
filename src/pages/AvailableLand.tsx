@@ -4,6 +4,17 @@ import { Link } from 'react-router-dom';
 import Dropdown from '../components/Dropdown';
 import { useContent } from '../context/ContentContext';
 
+const LOCATION_LABELS: Record<string, string> = {
+  nairobi: 'Nairobi Environs',
+  kiambu: 'Kiambu County',
+  machakos: 'Machakos County',
+  nakuru: 'Nakuru County',
+  kisumu: 'Kisumu County',
+  kajiado: 'Kajiado County',
+  mombasa: 'Mombasa County',
+  eldoret: 'Uasin Gishu County',
+};
+
 export default function AvailableLand() {
   const { data } = useContent();
   const [locationFilter, setLocationFilter] = useState("");
@@ -11,6 +22,12 @@ export default function AvailableLand() {
   const [sizeFilter, setSizeFilter] = useState("");
 
   const allListings = data.listings;
+  const { hero } = data.availableLand;
+
+  // Build location options dynamically from existing listings
+  const locationOptions = Array.from(new Set(allListings.map(l => l.locationId)))
+    .map(id => ({ value: id, label: LOCATION_LABELS[id] ?? id }))
+    .sort((a, b) => a.label.localeCompare(b.label));
 
   const filteredListings = allListings.filter(listing => {
     if (locationFilter && listing.locationId !== locationFilter) return false;
@@ -24,9 +41,9 @@ export default function AvailableLand() {
       {/* Header */}
       <div className="bg-brand-charcoal/90 backdrop-blur-md text-white py-16 mb-12 border-y border-white/10 shadow-lg">
         <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="font-serif text-4xl md:text-5xl mb-4">Available Land</h1>
+          <h1 className="font-serif text-4xl md:text-5xl mb-4">{hero.title}</h1>
           <p className="text-white/80 max-w-2xl mx-auto text-lg">
-            Browse our curated selection of premium, verified land across Kenya. Find the perfect plot for your next home or investment.
+            {hero.subtitle}
           </p>
         </div>
       </div>
@@ -42,13 +59,7 @@ export default function AvailableLand() {
             placeholder="All Locations"
             value={locationFilter}
             onChange={setLocationFilter}
-            options={[
-              { value: "nairobi", label: "Nairobi Environs" },
-              { value: "kiambu", label: "Kiambu County" },
-              { value: "machakos", label: "Machakos County" },
-              { value: "nakuru", label: "Nakuru County" },
-              { value: "kisumu", label: "Kisumu County" }
-            ]}
+            options={locationOptions}
           />
 
           <Dropdown

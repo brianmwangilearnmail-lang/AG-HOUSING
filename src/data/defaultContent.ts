@@ -12,6 +12,10 @@ export const defaultContent = {
       { value: "100%", label: "Verified Titles" },
       { value: "24/7", label: "Expert Support" }
     ],
+    featuredSection: {
+      title: "Featured Properties",
+      subtitle: "Discover our handpicked selection of premium land opportunities, fully verified and ready for investment or development."
+    },
     whyInvest: {
       title: "Why Choose AG Housing",
       subtitle: "Experience a seamless, transparent, and secure land buying process tailored for serious investors and future homeowners.",
@@ -20,6 +24,25 @@ export const defaultContent = {
         { title: "Prime Locations", text: "Strategically selected areas with high potential for appreciation, infrastructure development, and accessibility.", image: "" },
         { title: "Flexible Payments", text: "We offer tailored payment plans to make your land ownership journey smooth and financially manageable.", image: "" },
         { title: "Expert Guidance Throughout", text: "From site visits to the final transfer, our dedicated team is with you every step of the way.", image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=1200&auto=format&fit=crop" }
+      ]
+    },
+    howToJoin: {
+      groupRequirements: [
+        "Duly filled group/church registration form.",
+        "Group registration certificate",
+        "Passport size photo",
+        "Copy of KRA pin",
+        "Names of group members, copy of ID and Telephone numbers.",
+        "Registration ksh 2,000"
+      ],
+      individualRequirements: [
+        "Duly filled registration form",
+        "Copy of ID",
+        "Copy of KRA pin",
+        "Passport size photo",
+        "Registration ksh2,000",
+        "Minimum monthly contribution ksh1000.",
+        "A fully registered AG housing member should have share capital of not less than Ksh 20,000."
       ]
     }
   },
@@ -175,8 +198,12 @@ export const defaultContent = {
     },
     story: {
       title: "Our Story",
-      paragraph1: "AG Housing was founded with a singular vision: to bring trust and transparency to the Kenyan real estate market. We recognized that buying land is one of the most significant investments our clients will ever make, yet the process was often fraught with uncertainty and risk.",
-      paragraph2: "Today, we stand as a beacon of reliability. We meticulously source, verify, and curate premium land parcels, ensuring that every plot we offer comes with a clean title deed and immense potential for growth. Whether you are building a family home or expanding your investment portfolio, AG Housing is your trusted partner.",
+      paragraph1: "AG Housing Cooperative Society Limited was founded through the visionary leadership of Bishop Njiri with a clear mission to provide an affordable, structured, and accessible pathway to land ownership.",
+      paragraph2: "While inspired by the need to serve members of the Kenya Assemblies of God fraternity, the Society has steadily evolved into a dynamic and inclusive cooperative, welcoming individuals from all walks of life who share the aspiration of owning land and building a secure future.",
+      paragraph3: "Since its official launch following the inaugural meeting and elections held on 24th September 2018, the Society has remained committed to strong governance, transparency, and accountability in line with cooperative principles.",
+      paragraph4: "Our journey has been marked by steady growth and proven success. In 2018, the Society delivered Tala Phase I (99 residential plots) followed by Tala Phase II (16 residential plots), both fully sold, demonstrating strong member confidence. This momentum continued with the acquisition of a 10-acre parcel in Mai-Mahiu in 2023, followed by Kantafu Phase I in 2025 and Kantafu Phase II in 2026, with an upcoming project in Kitengela further reinforcing our commitment to expanding access to affordable land ownership.",
+      paragraph5: "Beyond land ownership, we are committed to building thriving communities. As part of our corporate social responsibility, we dedicated two plots within each project for the development of a place of worship, supporting both social connection and spiritual growth.",
+      paragraph6: "Today, AG Housing Cooperative Society Limited stands as a trusted partner in land investment empowering individuals, families, and communities to achieve stability, dignity, and long-term prosperity through land ownership.",
       image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1200&auto=format&fit=crop"
     },
     team: [
@@ -223,6 +250,12 @@ export const defaultContent = {
       phone: "+254 700 000 000\n+254 711 111 111",
       email: "sales@aghousing.co.ke\ninfo@aghousing.co.ke",
       hours: "Mon - Fri: 8:00 AM - 5:00 PM\nSat: 9:00 AM - 1:00 PM"
+    }
+  },
+  availableLand: {
+    hero: {
+      title: "Available Land",
+      subtitle: "Browse our curated selection of premium, verified land across Kenya. Find the perfect plot for your next home or investment."
     }
   },
   gallery: {
