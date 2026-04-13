@@ -92,6 +92,28 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
       }
     };
     load();
+
+    // ── Subscribe to real-time updates ──
+    const channel = supabase.channel('site_content_changes')
+      .on('postgres_changes', 
+        { event: 'UPDATE', schema: 'public', table: 'site_content', filter: 'id=eq.1' }, 
+        (payload) => {
+          console.log('Real-time content change received:', payload.new);
+          if (payload.new && payload.new.content) {
+            // Merge with local state to ensure no data loss
+            setData(prev => {
+              const updated = deepMerge(prev, payload.new.content as ContentData);
+              localStorage.setItem(LOCAL_KEY, JSON.stringify(updated));
+              return updated;
+            });
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   // ── Flush to Supabase immediately ──

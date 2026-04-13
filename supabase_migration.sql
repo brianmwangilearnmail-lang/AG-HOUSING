@@ -38,3 +38,6 @@ create policy "Admin can insert site content"
 insert into public.site_content (id, content)
 values (1, '{}'::jsonb)
 on conflict (id) do nothing;
+
+-- Enable Realtime for the CMS table
+alter publication supabase_realtime add table site_content;
