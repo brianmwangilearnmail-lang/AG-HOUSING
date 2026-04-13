@@ -39,7 +39,15 @@ export async function compressImage(base64: string, maxWidth = 1200, quality = 0
 }
 
 export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [data, setData] = useState<ContentData>(defaultContent);
+  const [data, setData] = useState<ContentData>(() => {
+    const cached = localStorage.getItem(LOCAL_KEY);
+    if (cached) {
+      try {
+        return deepMerge(defaultContent, JSON.parse(cached));
+      } catch {}
+    }
+    return defaultContent;
+  });
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
