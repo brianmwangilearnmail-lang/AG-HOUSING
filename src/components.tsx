@@ -195,7 +195,7 @@ export const Footer = () => {
 export const WhatsAppButton = () => {
   return (
     <a 
-      href="https://wa.me/254700000000?text=Hi%20AG%20Housing,%20I'd%20like%20to%20enquire%20about%20available%20land." 
+      href="https://wa.me/254701308058?text=Hi%20AG%20Housing,%20I'd%20like%20to%20enquire%20about%20available%20land." 
       target="_blank" 
       rel="noopener noreferrer"
       className="fixed bottom-6 right-6 z-50 bg-[#25D366] text-white p-4 rounded-full shadow-lg hover:scale-110 transition-transform flex items-center justify-center"
