@@ -97,14 +97,25 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
   // ── Flush to Supabase immediately ──
   const flushSave = async (updated: ContentData) => {
     setIsSaving(true);
-    localStorage.setItem(LOCAL_KEY, JSON.stringify(updated));
+    
     try {
-      await supabase
+      // Safely try local storage first (it can throw QuotaExceededError for huge images)
+      try {
+        localStorage.setItem(LOCAL_KEY, JSON.stringify(updated));
+      } catch (localErr) {
+        console.warn('Local storage quota exceeded. Proceeding to save to cloud only.');
+      }
+
+      const { error } = await supabase
         .from('site_content')
         .upsert({ id: 1, content: updated, updated_at: new Date().toISOString() });
+        
+      if (error) throw error;
+      
       setLastSaved(new Date());
-    } catch (err) {
-      console.error('Save failed (stored locally):', err);
+    } catch (err: any) {
+      console.error('Save failed:', err);
+      alert('Save failed. The image you uploaded might be too large. Try uploading a smaller image or clearing some data.');
     } finally {
       setIsSaving(false);
     }
