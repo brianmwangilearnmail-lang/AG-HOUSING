@@ -81,8 +81,8 @@ export default function ImageCropModal({ src, onComplete, onCancel }: ImageCropM
       canvas.height
     );
 
-    // Compress output
-    const base64 = canvas.toDataURL('image/jpeg', 0.82);
+    // Preserve transparency by saving as PNG
+    const base64 = canvas.toDataURL('image/png');
     onComplete(base64);
     setApplying(false);
   }, [completedCrop, brightness, contrast, onComplete]);
@@ -100,7 +100,8 @@ export default function ImageCropModal({ src, onComplete, onCancel }: ImageCropM
     ctx.filter = `brightness(${brightness}%) contrast(${contrast}%)`;
     ctx.drawImage(image, 0, 0);
 
-    const base64 = canvas.toDataURL('image/jpeg', 0.82);
+    // Preserve transparency by saving as PNG
+    const base64 = canvas.toDataURL('image/png');
     onComplete(base64);
     setApplying(false);
   }, [brightness, contrast, onComplete]);
