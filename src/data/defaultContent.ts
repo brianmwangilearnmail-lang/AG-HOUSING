@@ -206,6 +206,7 @@ export const defaultContent = {
       paragraph6: "Today, AG Housing Cooperative Society Limited stands as a trusted partner in land investment empowering individuals, families, and communities to achieve stability, dignity, and long-term prosperity through land ownership.",
       image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1200&auto=format&fit=crop"
     },
+    eligibilityText: "AG Housing is open to all KAG Sacco members, departments and groups that are registered under the KAG sacco.",
     team: [
       { id: 1, name: "David Mwangi", role: "Founder & CEO", img: "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=800&auto=format&fit=crop" },
       { id: 2, name: "Sarah Omondi", role: "Head of Sales", img: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=800&auto=format&fit=crop" },

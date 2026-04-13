@@ -48,7 +48,7 @@ export default function AboutUs() {
         {/* Eligibility Text */}
         <div className="bg-brand-cream/80 border border-brand-gold/30 rounded-3xl p-8 mb-12 text-center text-brand-charcoal shadow-sm">
            <p className="text-xl md:text-2xl font-medium">
-             AG Housing is open to all KAG Sacco members, departments and groups that are registered under the KAG sacco.
+             {(data.about as any).eligibilityText || "AG Housing is open to all KAG Sacco members, departments and groups that are registered under the KAG sacco."}
            </p>
         </div>
 

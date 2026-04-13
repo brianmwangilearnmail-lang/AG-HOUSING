@@ -541,6 +541,17 @@ export default function Dashboard() {
             </div>
 
             <div>
+              <SectionHeader title="Eligibility Notice" />
+              <div className="space-y-4 mb-10">
+                <div>
+                  <label className={labelCls}>Eligibility Text</label>
+                  <textarea rows={3} className={inputCls} value={(localData.about as any).eligibilityText ?? "AG Housing is open to all KAG Sacco members, departments and groups that are registered under the KAG sacco."}
+                    onChange={e => updatePath(['about', 'eligibilityText'], e.target.value)} />
+                </div>
+              </div>
+            </div>
+
+            <div>
               <div className="flex items-center justify-between mb-4">
                 <SectionHeader title="Team Members" />
                 <button onClick={() => {
