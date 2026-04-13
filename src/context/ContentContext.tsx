@@ -48,8 +48,10 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }
     return defaultContent;
   });
+  
+  // Start loading ONLY if we don't have a cache yet
   const [isSaving, setIsSaving] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(() => !localStorage.getItem(LOCAL_KEY));
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
 
   // Debounce ref — holds the latest pending data to save
@@ -59,7 +61,10 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
   // ── Load data on mount ──
   useEffect(() => {
     const load = async () => {
-      setIsLoading(true);
+      // Don't show the full page loader if we already hit the local cache
+      if (!localStorage.getItem(LOCAL_KEY)) {
+        setIsLoading(true);
+      }
       try {
         const { data: rows, error } = await supabase
           .from('site_content')
