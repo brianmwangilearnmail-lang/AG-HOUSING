@@ -18,8 +18,8 @@ const ContentContext = createContext<ContentContextType | undefined>(undefined);
 const LOCAL_KEY = 'ag_housing_content';
 const DEBOUNCE_MS = 800; // save 800ms after last change
 
-// ── Canvas-based image compressor — reduces base64 size by ~70-80% ──
-export async function compressImage(base64: string, maxWidth = 1200, quality = 0.75): Promise<string> {
+// ── Canvas-based image compressor — reduces size from MBs to KBs ──
+export async function compressImage(source: string | File, maxWidth = 1200, quality = 0.7): Promise<string> {
   return new Promise((resolve) => {
     const img = new Image();
     img.onload = () => {
@@ -30,13 +30,33 @@ export async function compressImage(base64: string, maxWidth = 1200, quality = 0
       canvas.width = w;
       canvas.height = h;
       const ctx = canvas.getContext('2d')!;
+      
+      // Draw image
       ctx.drawImage(img, 0, 0, w, h);
-      resolve(canvas.toDataURL('image/jpeg', quality));
+      
+      // Use WebP for best compression (supported by >96% of browsers)
+      // Quality 0.7 is a sweet spot for balance between speed and clarity
+      const base64 = canvas.toDataURL('image/webp', quality);
+      resolve(base64);
+      
+      // Cleanup object URL if we created one
+      if (source instanceof File) {
+        URL.revokeObjectURL(img.src);
+      }
     };
-    img.onerror = () => resolve(base64); // fallback to original on error
-    img.src = base64;
+    img.onerror = () => {
+      console.error('Image compression failed');
+      resolve(typeof source === 'string' ? source : '');
+    };
+    
+    if (source instanceof File) {
+      img.src = URL.createObjectURL(source);
+    } else {
+      img.src = source;
+    }
   });
 }
+
 
 export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [data, setData] = useState<ContentData>(() => {

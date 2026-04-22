@@ -13,16 +13,20 @@ const labelCls = "block text-xs font-semibold text-gray-500 uppercase tracking-w
 const sectionCls = "space-y-4";
 
 const ImageUploadButton = ({ src, onUpload }: { src: string; onUpload: (base64: string) => void }) => {
+  const [isCompressing, setIsCompressing] = useState(false);
   const [pendingSrc, setPendingSrc] = useState<string | null>(null);
 
-  const handleFile = (file: File) => {
-    const reader = new FileReader();
-    reader.onloadend = async () => {
-      const b64 = reader.result as string;
-      const compressed = await compressImage(b64, 1600, 0.85);
+  
+  const handleFile = async (file: File) => {
+    setIsCompressing(true);
+    try {
+      const compressed = await compressImage(file, 1600, 0.7);
       setPendingSrc(compressed);
-    };
-    reader.readAsDataURL(file);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsCompressing(false);
+    }
   };
 
   return (
@@ -37,9 +41,18 @@ const ImageUploadButton = ({ src, onUpload }: { src: string; onUpload: (base64: 
           </div>
         )}
         <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white pointer-events-none">
-          <ImageIcon size={24} className="mb-1" />
-          <span className="text-sm font-medium">Click to Upload</span>
-          <span className="text-xs mt-1 text-white/70">Crop &amp; adjust before saving</span>
+          {isCompressing ? (
+            <>
+              <div className="w-8 h-8 border-2 border-white border-t-transparent rounded-full animate-spin mb-2" />
+              <span className="text-sm font-medium">Compressing…</span>
+            </>
+          ) : (
+            <>
+              <ImageIcon size={24} className="mb-1" />
+              <span className="text-sm font-medium">Click to Upload</span>
+              <span className="text-xs mt-1 text-white/70">Crop &amp; adjust before saving</span>
+            </>
+          )}
         </div>
         <label className="absolute inset-0 cursor-pointer">
           <input
@@ -96,15 +109,14 @@ export default function Dashboard() {
   const [testimonialCropSrc, setTestimonialCropSrc] = useState<string | null>(null);
   const [testimonialCropIdx, setTestimonialCropIdx] = useState<number>(-1);
 
-  const openTestimonialCrop = (file: File, idx: number) => {
+  const openTestimonialCrop = async (file: File, idx: number) => {
     setTestimonialCropIdx(idx);
-    const reader = new FileReader();
-    reader.onloadend = async () => {
-      const b64 = reader.result as string;
-      const compressed = await compressImage(b64, 800, 0.85);
+    try {
+      const compressed = await compressImage(file, 800, 0.7);
       setTestimonialCropSrc(compressed);
-    };
-    reader.readAsDataURL(file);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const tabs: { id: Tab; label: string; icon: React.ReactNode }[] = [

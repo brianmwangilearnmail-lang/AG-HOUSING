@@ -91,8 +91,8 @@ export default function ImageCropModal({ src, onComplete, onCancel }: ImageCropM
       dh
     );
 
-    // Compress heavily with WebP (preserves transparency but reduces size by 80%)
-    const base64 = canvas.toDataURL('image/webp', 0.85);
+    // Compress heavily with WebP (preserves transparency but reduces size significantly)
+    const base64 = canvas.toDataURL('image/webp', 0.7);
     onComplete(base64);
     setApplying(false);
   }, [completedCrop, brightness, contrast, onComplete]);
@@ -120,8 +120,8 @@ export default function ImageCropModal({ src, onComplete, onCancel }: ImageCropM
     ctx.filter = `brightness(${brightness}%) contrast(${contrast}%)`;
     ctx.drawImage(image, 0, 0, dw, dh);
 
-    // Compress heavily with WebP (preserves transparency but reduces size by 80%)
-    const base64 = canvas.toDataURL('image/webp', 0.85);
+    // Compress heavily with WebP (preserves transparency but reduces size significantly)
+    const base64 = canvas.toDataURL('image/webp', 0.7);
     onComplete(base64);
     setApplying(false);
   }, [brightness, contrast, onComplete]);
