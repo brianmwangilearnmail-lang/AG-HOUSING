@@ -57,6 +57,45 @@ export async function compressImage(source: string | File, maxWidth = 1200, qual
   });
 }
 
+export async function uploadBase64ToSupabase(base64: string): Promise<string> {
+  if (!base64 || !base64.startsWith('data:image')) {
+    // It's likely already a URL or empty
+    return base64;
+  }
+
+  try {
+    // 1. Convert Base64 back to Blob
+    const res = await fetch(base64);
+    const blob = await res.blob();
+
+    // 2. Generate a unique filename
+    const ext = blob.type.split('/')[1] || 'webp';
+    const filename = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}.${ext}`;
+
+    // 3. Upload to Supabase Storage (bucket name: 'images')
+    const { data, error } = await supabase.storage
+      .from('images')
+      .upload(`public/${filename}`, blob, {
+        cacheControl: '31536000',
+        upsert: false
+      });
+
+    if (error) {
+      console.error('Supabase upload error:', error);
+      return base64; // Fallback to base64 if upload fails
+    }
+
+    // 4. Get public URL
+    const { data: { publicUrl } } = supabase.storage
+      .from('images')
+      .getPublicUrl(`public/${filename}`);
+
+    return publicUrl;
+  } catch (err) {
+    console.error('Upload to Supabase failed:', err);
+    return base64; // Fallback to base64 if something goes wrong
+  }
+}
 
 export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [data, setData] = useState<ContentData>(() => {

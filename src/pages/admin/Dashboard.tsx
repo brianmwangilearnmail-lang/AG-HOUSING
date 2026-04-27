@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useContent, ContentData, compressImage } from '../../context/ContentContext';
+import { useContent, ContentData, compressImage, uploadBase64ToSupabase } from '../../context/ContentContext';
 import ImageCropModal from '../../components/ui/ImageCropModal';
 import {
   Save, Image as ImageIcon, Plus, Trash2,
@@ -67,7 +67,18 @@ const ImageUploadButton = ({ src, onUpload }: { src: string; onUpload: (base64: 
       {pendingSrc && (
         <ImageCropModal
           src={pendingSrc}
-          onComplete={(cropped) => { onUpload(cropped); setPendingSrc(null); }}
+          onComplete={async (cropped) => {
+            setPendingSrc(null);
+            setIsCompressing(true);
+            try {
+              const url = await uploadBase64ToSupabase(cropped);
+              onUpload(url);
+            } catch (err) {
+              console.error(err);
+            } finally {
+              setIsCompressing(false);
+            }
+          }}
           onCancel={() => setPendingSrc(null)}
         />
       )}
@@ -856,12 +867,19 @@ export default function Dashboard() {
     {testimonialCropSrc && (
       <ImageCropModal
         src={testimonialCropSrc}
-        onComplete={(cropped) => {
-          const ts = [...localData.testimonials];
-          ts[testimonialCropIdx] = { ...ts[testimonialCropIdx], image: cropped };
-          updatePath(['testimonials'], ts);
+        onComplete={async (cropped) => {
           setTestimonialCropSrc(null);
-          setTestimonialCropIdx(-1);
+          // Show some loading indicator or just rely on the delay
+          try {
+            const url = await uploadBase64ToSupabase(cropped);
+            const ts = [...localData.testimonials];
+            ts[testimonialCropIdx] = { ...ts[testimonialCropIdx], image: url };
+            updatePath(['testimonials'], ts);
+          } catch (err) {
+            console.error(err);
+          } finally {
+            setTestimonialCropIdx(-1);
+          }
         }}
         onCancel={() => { setTestimonialCropSrc(null); setTestimonialCropIdx(-1); }}
       />
