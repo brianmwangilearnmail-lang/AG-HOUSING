@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, MapPin, Phone, Mail, MessageCircle } from 'lucide-react';
+import { Menu, X, MapPin, Phone, Mail, MessageCircle, Clock } from 'lucide-react';
 import { useContent } from './context/ContentContext';
 
 export const Navbar = () => {
@@ -167,17 +167,27 @@ export const Footer = () => {
           <div>
             <h4 className="text-white font-medium mb-6 uppercase tracking-wider text-sm">Contact Us</h4>
             <ul className="space-y-4">
-              <li className="flex items-start gap-3">
-                <MapPin size={20} className="text-brand-gold shrink-0 mt-1" />
-                <span>Nairobi Business Park,<br/>Ngong Road, Nairobi</span>
+              <li className="flex items-start gap-3 text-white">
+                <Phone size={20} className="shrink-0 mt-1" />
+                <div className="flex flex-col">
+                  <span className="font-medium">Phone & WhatsApp</span>
+                  <span className="text-white/90">+254 701 308058</span>
+                </div>
               </li>
-              <li className="flex items-center gap-3">
-                <Phone size={20} className="text-brand-gold shrink-0" />
-                <span>+254 700 000 000</span>
+              <li className="flex items-start gap-3 text-white">
+                <Mail size={20} className="shrink-0 mt-1" />
+                <div className="flex flex-col">
+                  <span className="font-medium">Email</span>
+                  <span className="text-white/90">assemblieshousing@gmail.com</span>
+                  <span className="text-white/90">info@aghousing.co.ke</span>
+                </div>
               </li>
-              <li className="flex items-center gap-3">
-                <Mail size={20} className="text-brand-gold shrink-0" />
-                <span>sales@aghousing.co.ke</span>
+              <li className="flex items-start gap-3 text-white">
+                <Clock size={20} className="shrink-0 mt-1" />
+                <div className="flex flex-col">
+                  <span className="font-medium">Working Hours</span>
+                  <span className="text-white/90">Mon - Fri: 8:00 AM - 5:00 PM</span>
+                </div>
               </li>
             </ul>
           </div>

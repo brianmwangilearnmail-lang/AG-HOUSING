@@ -248,9 +248,9 @@ export const defaultContent = {
     },
     info: {
       address: "Nairobi Business Park,\nNgong Road, Nairobi, Kenya",
-      phone: "+254 700 000 000\n+254 711 111 111",
-      email: "sales@aghousing.co.ke\ninfo@aghousing.co.ke",
-      hours: "Mon - Fri: 8:00 AM - 5:00 PM\nSat: 9:00 AM - 1:00 PM"
+      phone: "+254 701 308058",
+      email: "assemblieshousing@gmail.com\ninfo@aghousing.co.ke",
+      hours: "Mon - Fri: 8:00 AM - 5:00 PM"
     }
   },
   availableLand: {
