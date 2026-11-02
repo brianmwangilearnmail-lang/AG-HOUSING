@@ -97,6 +97,18 @@ export async function uploadBase64ToSupabase(base64: string): Promise<string> {
   }
 }
 
+// Helper to safely write to localStorage without crashing or locking stale data
+function safeSetLocalStorage(key: string, value: any) {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch (err) {
+    console.warn('LocalStorage write failed or quota exceeded:', err);
+    try {
+      localStorage.removeItem(key);
+    } catch {}
+  }
+}
+
 export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [data, setData] = useState<ContentData>(() => {
     const cached = localStorage.getItem(LOCAL_KEY);
@@ -120,7 +132,6 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
   // ── Load data on mount ──
   useEffect(() => {
     const load = async () => {
-      // Don't show the full page loader if we already hit the local cache
       if (!localStorage.getItem(LOCAL_KEY)) {
         setIsLoading(true);
       }
@@ -134,14 +145,17 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
         if (!error && rows?.content && Object.keys(rows.content).length > 0) {
           const merged = deepMerge(defaultContent, rows.content as ContentData);
           setData(merged);
-          localStorage.setItem(LOCAL_KEY, JSON.stringify(merged));
+          safeSetLocalStorage(LOCAL_KEY, merged);
         } else {
           const cached = localStorage.getItem(LOCAL_KEY);
           if (cached) {
-            setData(deepMerge(defaultContent, JSON.parse(cached)));
+            try {
+              setData(deepMerge(defaultContent, JSON.parse(cached)));
+            } catch {}
           }
         }
-      } catch {
+      } catch (err) {
+        console.error('Failed to load content from Supabase:', err);
         const cached = localStorage.getItem(LOCAL_KEY);
         if (cached) {
           try { setData(deepMerge(defaultContent, JSON.parse(cached))); } catch {}
@@ -162,7 +176,7 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
             // Merge with local state to ensure no data loss
             setData(prev => {
               const updated = deepMerge(prev, payload.new.content as ContentData);
-              localStorage.setItem(LOCAL_KEY, JSON.stringify(updated));
+              safeSetLocalStorage(LOCAL_KEY, updated);
               return updated;
             });
           }
@@ -180,12 +194,7 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
     setIsSaving(true);
     
     try {
-      // Safely try local storage first (it can throw QuotaExceededError for huge images)
-      try {
-        localStorage.setItem(LOCAL_KEY, JSON.stringify(updated));
-      } catch (localErr) {
-        console.warn('Local storage quota exceeded. Proceeding to save to cloud only.');
-      }
+      safeSetLocalStorage(LOCAL_KEY, updated);
 
       const { error } = await supabase
         .from('site_content')
@@ -196,7 +205,7 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
       setLastSaved(new Date());
     } catch (err: any) {
       console.error('Save failed:', err);
-      alert('Save failed. The image you uploaded might be too large. Try uploading a smaller image or clearing some data.');
+      alert('Save failed. Please check your connection or image size.');
     } finally {
       setIsSaving(false);
     }
